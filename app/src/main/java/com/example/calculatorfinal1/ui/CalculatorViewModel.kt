@@ -15,16 +15,9 @@ import org.koin.core.component.inject
 
 
 class CalculatorViewModel(
-//   private val saveCalculatorHistoryUseCase: SaveCalculatorHistoryUseCase,
-//   private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase
+    private val saveCalculatorHistoryUseCase: SaveCalculatorHistoryUseCase,
+   private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase
 ): ViewModel(), KoinComponent {
-
-    private val saveCalculatorHistoryUseCase: SaveCalculatorHistoryUseCase by
-        inject<SaveCalculatorHistoryUseCase>()
-
-    private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase by
-        inject<GetCalculatorHistoryUseCase>()
-
 
     var resultText by mutableStateOf("0")
     private var resultCache: String = "0"

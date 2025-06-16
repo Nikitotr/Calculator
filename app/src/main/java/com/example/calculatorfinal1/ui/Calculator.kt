@@ -98,7 +98,6 @@ fun Calculator(modifier: Modifier = Modifier, result: String, memoryValue:String
                     LargeCalculatorButton(
                         btn = "SAVE",
                         onClick = {
-                           // viewModel.onButtonClick("SAVE")
                             onSave()
                         }
                     )
@@ -113,7 +112,6 @@ fun Calculator(modifier: Modifier = Modifier, result: String, memoryValue:String
                     LargeCalculatorButton(
                         btn = "GET",
                         onClick = {
-                            //viewModel.onButtonClick("GET")
                             onGet()
                         }
                     )

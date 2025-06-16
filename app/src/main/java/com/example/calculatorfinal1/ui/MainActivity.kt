@@ -18,27 +18,10 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity(), KoinComponent {
-//    private val saveCalculatorHistoryUseCase: SaveCalculatorHistoryUseCase by
-//    inject<SaveCalculatorHistoryUseCase>()
-//
-//    private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase by
-//    inject<GetCalculatorHistoryUseCase>()
 
     private val viewModel: CalculatorViewModel by lazy {
-
        getViewModel<CalculatorViewModel>()
-
-        //GlobalContext.get().get<CalculatorViewModel>()
     }
-//        parameters = {
-//            parametersOf(
-//                saveCalculatorHistoryUseCase,
-//                getCalculatorHistoryUseCase
-//            )
-//
-//        }
-
-//     val viewModel: CalculatorViewModel get() = provideViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +32,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Calculator(
                         modifier = Modifier.padding(innerPadding),
-                        //viewModel = viewModel
                         onClick = { viewModel.onButtonClick(it) },
                         onSave = { viewModel.onButtonClick("SAVE") },
                         onGet = { viewModel.onButtonClick("GET") },
@@ -60,12 +42,4 @@ class MainActivity : ComponentActivity(), KoinComponent {
             }
         }
     }
-//    fun provideViewModel(): CalculatorViewModel = getViewModel<CalculatorViewModel>(
-//        parameters = {
-//            parametersOf(
-//                saveCalculatorHistoryUseCase,
-//                getCalculatorHistoryUseCase
-//            )
-//        }
-//    )
 }

@@ -10,7 +10,7 @@ interface CalculatorDao {
     @Insert
     suspend fun insert(history: CalculatorHistoryEntity): Long
 
-    @Query("SELECT * FROM CalculatorDatabase ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM CalculatorDatabase ORDER BY id DESC")
     suspend fun getLatestHistory(): CalculatorHistoryEntity?
 
     @Query("DELETE FROM CalculatorDatabase")

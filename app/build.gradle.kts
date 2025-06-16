@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+//    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -37,9 +38,19 @@ android {
     buildFeatures {
         compose = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
+    }
 }
 
 dependencies {
+
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -49,8 +60,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.room.common.jvm)
-    implementation(libs.androidx.room.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,12 +67,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.runtime:runtime-livedata:1.8.2")
-    implementation ("net.objecthunter:exp4j:0.4.8")
-    implementation ("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.runtime.livedata)
+    implementation (libs.exp4j)
+    implementation (libs.androidx.material.icons.extended)
 
+    //noinspection UseTomlInstead
     implementation("io.insert-koin:koin-core:4.0.3")
-    implementation("io.insert-koin:koin-android:4.0.3")
-    implementation ("io.insert-koin:koin-androidx-compose:4.0.3")
+    implementation(libs.koin.android)
+    implementation (libs.koin.androidx.compose)
 
 }

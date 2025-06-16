@@ -17,33 +17,13 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 object CalculatorKoinModule {
-
     val AppModule = module {
         single { CalculatorDatabase.getInstance(androidContext()) }
         single { get<CalculatorDatabase>().calculatorDao() }
-
-          single <ICalculatorLocalRepository> {CalculatorLocalRepository(get())}
-
-       // factoryOf(::CalculatorLocalRepository) bind ICalculatorLocalRepository::class
-        //single<ICalculatorDataSource> { CalculatorStorage(get()) }
+        single<ICalculatorLocalRepository> { CalculatorLocalRepository(get()) }
         factoryOf(::CalculatorStorage) bind ICalculatorDataSource::class
-
         factoryOf(::SaveCalculatorHistoryUseCase)
         factoryOf(::GetCalculatorHistoryUseCase)
-
         viewModelOf(::CalculatorViewModel)
-
-
-
-
-//            viewModel {
-//                CalculatorViewModel(
-//                    saveCalculatorHistoryUseCase = get(),
-//                    getCalculatorHistoryUseCase = get()
-//                )
-//            }
-
-
     }
-
 }

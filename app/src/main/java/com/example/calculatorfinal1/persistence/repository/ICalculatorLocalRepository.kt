@@ -4,6 +4,6 @@ import com.example.calculatorfinal1.persistence.entity.CalculatorHistoryEntity
 
 
 interface ICalculatorLocalRepository {
-    suspend fun saveCalulatorHistory(entity : CalculatorHistoryEntity): Result<Int>
-    suspend fun getCalulatorHistory(): Result<String>
+    suspend fun saveCalculatorHistory(entity : CalculatorHistoryEntity): Result<Int>
+    suspend fun getCalculatorHistory(): Result<String>
 }

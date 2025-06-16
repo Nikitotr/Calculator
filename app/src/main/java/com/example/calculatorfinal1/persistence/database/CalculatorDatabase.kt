@@ -12,7 +12,8 @@ private const val version = 1
 @Database(
     version = version,
     entities = [CalculatorHistoryEntity::class],
-    autoMigrations = []
+    autoMigrations = [],
+    exportSchema = false
 )
 
 abstract class CalculatorDatabase : RoomDatabase() {
@@ -34,7 +35,7 @@ abstract class CalculatorDatabase : RoomDatabase() {
                 CalculatorDatabase::class.java,
                 "CalculatorDatabase.db"
             )
-                .fallbackToDestructiveMigration(dropAllTables = true)
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

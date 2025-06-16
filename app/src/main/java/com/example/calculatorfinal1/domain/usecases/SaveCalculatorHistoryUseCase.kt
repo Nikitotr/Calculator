@@ -4,6 +4,6 @@ import com.example.calculatorfinal1.domain.usecases.datasource.ICalculatorDataSo
 
 class SaveCalculatorHistoryUseCase(private val dataSource: ICalculatorDataSource) {
     suspend operator fun invoke(expression: String): Result<Int> {
-        return dataSource.saveCalulatorHistory(expression)
+        return dataSource.saveCalculatorHistory(expression)
     }
 }
