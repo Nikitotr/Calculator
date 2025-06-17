@@ -13,7 +13,11 @@ class CalculatorStorage(
         return localRepository.saveCalculatorHistory(entity)
     }
 
-    override suspend fun getCalculatorHistory(): Result<String> {
+    override suspend fun getCalculatorHistory(): Result<List<String>> {
         return localRepository.getCalculatorHistory()
+    }
+
+    override suspend fun clearCalculatorHistory(): Result<Int> {
+        return localRepository.clearCalculatorHistory()
     }
 }

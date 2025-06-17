@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.example.calculatorfinal1.domain.usecases.GetCalculatorHistoryUseCase
 import com.example.calculatorfinal1.domain.usecases.SaveCalculatorHistoryUseCase
@@ -20,8 +21,9 @@ import org.koin.core.parameter.parametersOf
 class MainActivity : ComponentActivity(), KoinComponent {
 
     private val viewModel: CalculatorViewModel by lazy {
-       getViewModel<CalculatorViewModel>()
+        getViewModel<CalculatorViewModel>()
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,11 @@ class MainActivity : ComponentActivity(), KoinComponent {
                         onSave = { viewModel.onButtonClick("SAVE") },
                         onGet = { viewModel.onButtonClick("GET") },
                         result = viewModel.resultText,
-                        memoryValue = viewModel.memoryValue
+                        memoryValue = viewModel.memoryValue,
+                        historyList = viewModel.historyList,
+                        onGetDropDownSelected = { viewModel.getDropDownSelected(it) },
+                        onClear = {viewModel.clearHistory()}
+
                     )
                 }
             }

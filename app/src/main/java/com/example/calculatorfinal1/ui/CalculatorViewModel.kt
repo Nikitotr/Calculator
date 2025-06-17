@@ -1,6 +1,7 @@
 package com.example.calculatorfinal1.ui
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -12,13 +13,20 @@ import net.objecthunter.exp4j.ExpressionBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.calculatorfinal1.domain.usecases.ClearCalculatorHistoryUseCase
 
 
 class CalculatorViewModel(
     private val saveCalculatorHistoryUseCase: SaveCalculatorHistoryUseCase,
-   private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase
-): ViewModel(), KoinComponent {
-
+    private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase,
+    private val clearCalculatorHistoryUseCase: ClearCalculatorHistoryUseCase
+) : ViewModel(), KoinComponent {
+    // var historyList = mutableStateListOf<String>()
+    var historyList by mutableStateOf <List<String>>(listOf())
+    //var historyList: List<String> = listOf()
     var resultText by mutableStateOf("0")
     private var resultCache: String = "0"
     var memoryValue by mutableStateOf("")
@@ -55,6 +63,10 @@ class CalculatorViewModel(
                     saveHistory()
                 }
 
+                "CLEAR" -> {
+                    clearHistory()
+                }
+
                 "GET" -> {
                     getHistory()
                 }
@@ -79,26 +91,46 @@ class CalculatorViewModel(
         }
     }
 
-     private fun saveHistory() {
+    private fun saveHistory() {
         viewModelScope.launch {
             saveCalculatorHistoryUseCase(resultText).onSuccess {
                 memoryValue = "SAVED: $resultText"
+                resultText = "0"
             }.onFailure {
                 memoryValue = "SAVE ERROR"
             }
         }
     }
 
-     private fun getHistory() {
+     fun clearHistory(){
+        viewModelScope.launch {
+            clearCalculatorHistoryUseCase().onSuccess {
+                historyList = listOf()
+                memoryValue = "HISTORY CLEARED"
+            }.onFailure {
+                memoryValue = "CLEAR ERROR"
+        }
+    }
+    }
+
+    private fun getHistory() {
         viewModelScope.launch {
             getCalculatorHistoryUseCase().onSuccess { data ->
-                memoryValue = "MEMORY: $data"
-                resultText = data
-                resultCache = data
+
+                if (data.isNotEmpty()) {
+                    historyList = data
+                }
+
             }.onFailure {
                 memoryValue = "DOWNLOAD ERROR"
             }
         }
+    }
+
+     fun getDropDownSelected(value: String) {
+        memoryValue = "MEMORY: $value"
+        resultText = value
+        resultCache = value
     }
 
     private fun calculateResult(equation: String): String {

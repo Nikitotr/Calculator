@@ -36,9 +36,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.calculatorfinal1.R
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 
 @Composable
-fun Calculator(modifier: Modifier = Modifier, result: String, memoryValue:String, onClick: (String) -> Unit, onSave: () -> Unit, onGet: () -> Unit) {
+fun Calculator(modifier: Modifier = Modifier,
+               result: String,
+               memoryValue:String,
+               historyList: List<String>,
+               onClick: (String) -> Unit,
+               onSave: () -> Unit,
+               onGet: () -> Unit,
+               onGetDropDownSelected: (String) -> Unit,
+               onClear:() -> Unit
+
+) {
     val buttonList = listOf(
         "AC", "(", ")", "/",
         "7", "8", "9", "*",
@@ -46,6 +59,7 @@ fun Calculator(modifier: Modifier = Modifier, result: String, memoryValue:String
         "1", "2", "3", "-",
         "C", "0", ".", "=",
     )
+    var isDropdownExpanded by remember { mutableStateOf(false) } ////////////
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             verticalArrangement = Arrangement.Bottom,
@@ -103,6 +117,18 @@ fun Calculator(modifier: Modifier = Modifier, result: String, memoryValue:String
                     )
                 }
 
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                ) {
+                    LargeCalculatorButton(
+                        btn = "C",
+                        onClick = {
+                            onClear()
+                        }
+                    )
+                }
 
                 Box(
                     modifier = Modifier
@@ -112,10 +138,27 @@ fun Calculator(modifier: Modifier = Modifier, result: String, memoryValue:String
                     LargeCalculatorButton(
                         btn = "GET",
                         onClick = {
-                            onGet()
+                            isDropdownExpanded = true
+                              onGet()
                         }
                     )
+
+                    DropdownMenu(
+                        expanded = isDropdownExpanded,
+                        onDismissRequest = { isDropdownExpanded = false }
+                    ) {
+                        historyList.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(item) },
+                                onClick = {
+                                    isDropdownExpanded = false
+                                    onGetDropDownSelected(item)
+                                }
+                            )
+                        }
+                    }
                 }
+
             }
         }
     }
