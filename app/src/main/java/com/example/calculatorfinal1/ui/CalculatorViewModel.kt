@@ -1,32 +1,27 @@
 package com.example.calculatorfinal1.ui
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.calculatorfinal1.domain.usecases.ClearCalculatorHistoryUseCase
+import com.example.calculatorfinal1.domain.usecases.DeleteHistoryItemUseCase
 import com.example.calculatorfinal1.domain.usecases.GetCalculatorHistoryUseCase
 import com.example.calculatorfinal1.domain.usecases.SaveCalculatorHistoryUseCase
+import com.example.calculatorfinal1.ui.items.HistoryItemUi
 import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.component.inject
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.calculatorfinal1.domain.usecases.ClearCalculatorHistoryUseCase
 
 
 class CalculatorViewModel(
     private val saveCalculatorHistoryUseCase: SaveCalculatorHistoryUseCase,
     private val getCalculatorHistoryUseCase: GetCalculatorHistoryUseCase,
-    private val clearCalculatorHistoryUseCase: ClearCalculatorHistoryUseCase
+    private val clearCalculatorHistoryUseCase: ClearCalculatorHistoryUseCase,
+    private val deleteHistoryItemUseCase: DeleteHistoryItemUseCase
 ) : ViewModel(), KoinComponent {
-    // var historyList = mutableStateListOf<String>()
-    var historyList by mutableStateOf <List<String>>(listOf())
-    //var historyList: List<String> = listOf()
+    var historyList by mutableStateOf<List<HistoryItemUi>>(listOf())
     var resultText by mutableStateOf("0")
     private var resultCache: String = "0"
     var memoryValue by mutableStateOf("")
@@ -102,15 +97,15 @@ class CalculatorViewModel(
         }
     }
 
-     fun clearHistory(){
+    fun clearHistory() {
         viewModelScope.launch {
             clearCalculatorHistoryUseCase().onSuccess {
                 historyList = listOf()
                 memoryValue = "HISTORY CLEARED"
             }.onFailure {
                 memoryValue = "CLEAR ERROR"
+            }
         }
-    }
     }
 
     private fun getHistory() {
@@ -118,7 +113,7 @@ class CalculatorViewModel(
             getCalculatorHistoryUseCase().onSuccess { data ->
 
                 if (data.isNotEmpty()) {
-                    historyList = data
+                    historyList = mapModelsToItemUi(data)
                 }
 
             }.onFailure {
@@ -127,7 +122,7 @@ class CalculatorViewModel(
         }
     }
 
-     fun getDropDownSelected(value: String) {
+    fun getDropDownSelected(value: String) {
         memoryValue = "MEMORY: $value"
         resultText = value
         resultCache = value
@@ -144,6 +139,15 @@ class CalculatorViewModel(
             }
         } catch (e: Exception) {
             "Error"
+        }
+    }
+
+    fun onDropDownDeleteItem(historyItem: HistoryItemUi) {
+        viewModelScope.launch {
+            deleteHistoryItemUseCase(historyItem.id).onSuccess {
+                // historyList.drop(historyList.indexOf(historyItem))
+                historyList = historyList.filterNot { item -> item.id == historyItem.id }
+            }
         }
     }
 }

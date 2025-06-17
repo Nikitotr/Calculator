@@ -1,5 +1,7 @@
 package com.example.calculatorfinal1.ui
 
+import android.content.ClipData.Item
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,18 +41,22 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.*
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.draw.scale
+import com.example.calculatorfinal1.ui.items.HistoryItemUi
 
 @Composable
-fun Calculator(modifier: Modifier = Modifier,
-               result: String,
-               memoryValue:String,
-               historyList: List<String>,
-               onClick: (String) -> Unit,
-               onSave: () -> Unit,
-               onGet: () -> Unit,
-               onGetDropDownSelected: (String) -> Unit,
-               onClear:() -> Unit
-
+fun Calculator(
+    modifier: Modifier = Modifier,
+    result: String,
+    memoryValue: String,
+    historyList: List<HistoryItemUi>,
+    onClick: (String) -> Unit,
+    onSave: () -> Unit,
+    onGet: () -> Unit,
+    onGetDropDownSelected: (String) -> Unit,
+    onDropDownDeleteItem: (HistoryItemUi) -> Unit,
+    onClear: () -> Unit
 ) {
     val buttonList = listOf(
         "AC", "(", ")", "/",
@@ -63,7 +69,9 @@ fun Calculator(modifier: Modifier = Modifier,
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             verticalArrangement = Arrangement.Bottom,
-            modifier = Modifier.fillMaxHeight().width(450.dp),
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(450.dp),
             horizontalAlignment = Alignment.End
         ) {
             Text(
@@ -106,7 +114,7 @@ fun Calculator(modifier: Modifier = Modifier,
 
                 Box(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(0.5f)
                         .padding(horizontal = 4.dp)
                 ) {
                     LargeCalculatorButton(
@@ -123,23 +131,10 @@ fun Calculator(modifier: Modifier = Modifier,
                         .padding(horizontal = 4.dp)
                 ) {
                     LargeCalculatorButton(
-                        btn = "C",
-                        onClick = {
-                            onClear()
-                        }
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                ) {
-                    LargeCalculatorButton(
-                        btn = "GET",
+                        btn = "HISTORY",
                         onClick = {
                             isDropdownExpanded = true
-                              onGet()
+                            onGet()
                         }
                     )
 
@@ -148,19 +143,75 @@ fun Calculator(modifier: Modifier = Modifier,
                         onDismissRequest = { isDropdownExpanded = false }
                     ) {
                         historyList.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(item) },
-                                onClick = {
+//                            DropdownMenuItem(
+//                                text = { Text(item.value) },
+//                                onClick = {
+//                                    isDropdownExpanded = false
+//                                    onGetDropDownSelected(item.value)
+//                                }
+//                            )
+                            CalculatorButtonClear(
+                                historyItemUi = item,
+                                onDropDownDeleteItem = {
+                                    onDropDownDeleteItem(item)
+                                },
+                                onDropDownItemClick = {
                                     isDropdownExpanded = false
-                                    onGetDropDownSelected(item)
+                                    onGetDropDownSelected(item.value)
                                 }
                             )
                         }
                     }
                 }
+                Box(
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .padding(horizontal = 4.dp)
+                ) {
+                    LargeCalculatorButton(
+                        btn = "CLEAR",
+                        onClick = {
+                            onClear()
+                        }
+                    )
+                }
 
             }
         }
+    }
+
+
+}
+
+@Composable
+fun CalculatorButtonClear(
+    historyItemUi: HistoryItemUi,
+    onDropDownItemClick: () -> Unit,
+    onDropDownDeleteItem:() -> Unit,
+) {
+    Row(
+        modifier = Modifier.
+        padding(horizontal = 10.dp, vertical = 6.dp)) {
+        Text(
+            text = historyItemUi.value,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .clickable { onDropDownItemClick() }
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_clear),
+            contentDescription = null,
+            tint = Color.Black,
+            modifier = Modifier
+                .size(36.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .clickable{ onDropDownDeleteItem() } // onDeleteItem()
+
+        )
     }
 }
 
@@ -178,8 +229,12 @@ fun CalculatorButton(btn: String, onClick: () -> Unit) {
         }
     }
 }
+
 @Composable
-fun LargeCalculatorButton(btn: String, onClick: () -> Unit) {
+fun LargeCalculatorButton(
+    btn: String,
+    onClick: () -> Unit
+) {
     Box(modifier = Modifier.padding(vertical = 8.dp)) {
         FloatingActionButton(
             onClick = onClick,
@@ -197,23 +252,34 @@ fun LargeCalculatorButton(btn: String, onClick: () -> Unit) {
                 when (btn) {
                     "SAVE" -> Icon(
                         painter = painterResource(R.drawable.ic_save),
-                        contentDescription = stringResource(R.string.save),
+                        contentDescription = null,
                         modifier = Modifier.size(28.dp),
                         tint = Color.White
                     )
-                    "GET" -> Icon(
+
+                    "HISTORY" -> Icon(
                         painter = painterResource(R.drawable.ic_get),
-                        contentDescription = stringResource(R.string.get),
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp),
+                        tint = Color.White
+                    )
+
+                    "CLEAR" -> Icon(
+                        painter = painterResource(R.drawable.ic_clear),
+                        contentDescription = null,
                         modifier = Modifier.size(28.dp),
                         tint = Color.White
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = btn,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Medium
-                )
+
+                if (btn == "HISTORY") {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = btn,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
     }
@@ -227,7 +293,8 @@ fun getColor(btn: String): Color {
         return Color.Gray
     if (btn == "/" || btn == "*" || btn == "+" || btn == "-" || btn == "=")
         return Color(0xFFFF9800)
-    if  (btn =="SAVE" || btn == "GET")
+    if (btn == "SAVE" || btn == "CLEAR" || btn == "HISTORY")
         return Color(0xFF4CAF50)
+
     return Color(0xFF00C8C9)
 }

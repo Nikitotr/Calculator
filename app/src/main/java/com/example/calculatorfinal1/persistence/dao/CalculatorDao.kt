@@ -11,9 +11,13 @@ interface CalculatorDao {
     suspend fun insert(history: CalculatorHistoryEntity): Long
 
     @Query("SELECT * FROM CalculatorDatabase ORDER BY id DESC")
-    suspend fun getHistory(): List<CalculatorHistoryEntity?>
+    suspend fun getHistory(): List<CalculatorHistoryEntity>
 
     @Query("DELETE FROM CalculatorDatabase")
     suspend fun clearHistory(): Int
+
+    @Query("DELETE FROM CalculatorDatabase WHERE id = :id ")
+    suspend fun deleteById(id: Int): Int
+
 }
 

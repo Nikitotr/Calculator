@@ -41,7 +41,8 @@ class MainActivity : ComponentActivity(), KoinComponent {
                         memoryValue = viewModel.memoryValue,
                         historyList = viewModel.historyList,
                         onGetDropDownSelected = { viewModel.getDropDownSelected(it) },
-                        onClear = {viewModel.clearHistory()}
+                        onClear = {viewModel.clearHistory()},
+                        onDropDownDeleteItem = {viewModel.onDropDownDeleteItem(it)}
 
                     )
                 }

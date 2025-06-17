@@ -2,6 +2,7 @@ package com.example.calculatorfinal1.di
 
 import com.example.calculatorfinal1.data.CalculatorStorage
 import com.example.calculatorfinal1.domain.usecases.ClearCalculatorHistoryUseCase
+import com.example.calculatorfinal1.domain.usecases.DeleteHistoryItemUseCase
 import com.example.calculatorfinal1.domain.usecases.GetCalculatorHistoryUseCase
 import com.example.calculatorfinal1.domain.usecases.SaveCalculatorHistoryUseCase
 import com.example.calculatorfinal1.domain.usecases.datasource.ICalculatorDataSource
@@ -24,6 +25,7 @@ object CalculatorKoinModule {
         factoryOf(::SaveCalculatorHistoryUseCase)
         factoryOf(::GetCalculatorHistoryUseCase)
         factoryOf(::ClearCalculatorHistoryUseCase)
+        factoryOf(::DeleteHistoryItemUseCase)
         viewModelOf(::CalculatorViewModel)
     }
 }

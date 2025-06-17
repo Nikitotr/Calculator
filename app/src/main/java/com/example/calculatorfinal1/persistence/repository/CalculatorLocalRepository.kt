@@ -1,6 +1,7 @@
 package com.example.calculatorfinal1.persistence.repository
 
-import com.example.calculatorfinal1.data.toExpressions
+import com.example.calculatorfinal1.data.mapEntitiesToModels
+import com.example.calculatorfinal1.domain.historyItem.HistoryModel
 import com.example.calculatorfinal1.persistence.dao.CalculatorDao
 import com.example.calculatorfinal1.persistence.entity.CalculatorHistoryEntity
 
@@ -25,12 +26,12 @@ class CalculatorLocalRepository(private val dao: CalculatorDao) : ICalculatorLoc
        }
     }
 
-    override suspend fun getCalculatorHistory(): Result<List<String>> {
+    override suspend fun getCalculatorHistory(): Result<List<HistoryModel>> {
         val result = try {
             val history = dao.getHistory()
-            val expressions = history.toExpressions()
-            if (expressions.isNotEmpty()) {
-                Result.success(expressions)
+            val models = mapEntitiesToModels(history)
+            if (models.isNotEmpty()) {
+                Result.success(models)
             } else {
                 Result.success(listOf())
             }
@@ -39,4 +40,13 @@ class CalculatorLocalRepository(private val dao: CalculatorDao) : ICalculatorLoc
         }
         return result
     }
+
+    override suspend fun deleteHistoryItem(id: Int): Result<Int> {
+        return  try {
+            val deletedRows = dao.deleteById(id)
+            Result.success(deletedRows)
+        } catch (e: Exception) {
+            Result.failure(e)
+    }
+}
 }
