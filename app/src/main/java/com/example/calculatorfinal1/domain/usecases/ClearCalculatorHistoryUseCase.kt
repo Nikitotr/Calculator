@@ -6,5 +6,4 @@ class ClearCalculatorHistoryUseCase (private val dataSource: ICalculatorDataSour
     suspend operator fun invoke(): Result<Int> {
         return dataSource.clearCalculatorHistory()
     }
-
 }

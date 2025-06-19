@@ -1,6 +1,5 @@
 package com.example.calculatorfinal1.ui
 
-import android.content.ClipData.Item
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,32 +17,27 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.calculatorfinal1.R
-import org.koin.androidx.compose.koinViewModel
-import androidx.compose.runtime.*
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.draw.scale
 import com.example.calculatorfinal1.ui.items.HistoryItemUi
+
 
 @Composable
 fun Calculator(
@@ -65,7 +59,7 @@ fun Calculator(
         "1", "2", "3", "-",
         "C", "0", ".", "=",
     )
-    var isDropdownExpanded by remember { mutableStateOf(false) } ////////////
+    var isDropdownExpanded by remember { mutableStateOf(false) }
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             verticalArrangement = Arrangement.Bottom,
@@ -139,6 +133,8 @@ fun Calculator(
                     )
 
                     DropdownMenu(
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f),
                         expanded = isDropdownExpanded,
                         onDismissRequest = { isDropdownExpanded = false }
                     ) {
@@ -187,19 +183,23 @@ fun Calculator(
 fun CalculatorButtonClear(
     historyItemUi: HistoryItemUi,
     onDropDownItemClick: () -> Unit,
-    onDropDownDeleteItem:() -> Unit,
+    onDropDownDeleteItem: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.
-        padding(horizontal = 10.dp, vertical = 6.dp)) {
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Text(
             text = historyItemUi.value,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
+            fontSize = 22.sp,
+            textAlign = TextAlign.Start,
             maxLines = 1,
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(4.dp)
                 .clickable { onDropDownItemClick() }
         )
         Icon(
@@ -208,8 +208,8 @@ fun CalculatorButtonClear(
             tint = Color.Black,
             modifier = Modifier
                 .size(36.dp)
-                .padding(horizontal = 8.dp, vertical = 8.dp)
-                .clickable{ onDropDownDeleteItem() } // onDeleteItem()
+                .padding(horizontal = 8.dp, vertical = 6.dp)
+                .clickable { onDropDownDeleteItem() } // onDeleteItem()
 
         )
     }

@@ -111,11 +111,9 @@ class CalculatorViewModel(
     private fun getHistory() {
         viewModelScope.launch {
             getCalculatorHistoryUseCase().onSuccess { data ->
-
                 if (data.isNotEmpty()) {
                     historyList = mapModelsToItemUi(data)
                 }
-
             }.onFailure {
                 memoryValue = "DOWNLOAD ERROR"
             }
